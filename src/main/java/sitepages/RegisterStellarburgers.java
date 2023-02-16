@@ -1,57 +1,56 @@
 package sitepages;
-
-import io.qameta.allure.Step;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 public class RegisterStellarburgers {
-    private final WebDriver driver;
-    private final By fieldNameRegistration = By.xpath("//*[text()='Имя']/following::input");
+    //private final WebDriver driver;
+    private static final String REGISTRATION_PAGE_TEST_URL = "https://stellarburgers.nomoreparties.site/register";
+    //Локатор поля ввода "Имя" на странице регистрации
+    private static final By fieldNameRegistration = By.xpath("//*[text()='Имя']/following::input");
     //Локатор поля ввода "Email" на странице регистрации
-    private final By fieldEmailRegistration = By.xpath("//*[text()='Email']/following::input");
+    private static final By fieldEmailRegistration = By.xpath("//*[text()='Email']/following::input");
     //Локатор поля ввода "Пароль" на странице регистрации
-    private final By fieldPasswordRegistration = By.xpath("//*[text()='Пароль']/following::input");
+    private static final By fieldPasswordRegistration = By.xpath("//*[text()='Пароль']/following::input");
     //Локатор кнопки "Зарегистрироваться" на странице регистрации
-    private final By buttonRegistration = By.xpath("//*[text()='Зарегистрироваться']");
+    private static final By buttonRegistration = By.xpath("//*[text()='Зарегистрироваться']");
     //Локатор сообщения о некорректном пароле на странице регистрации
-    private final By messageErrorPassword = By.xpath("//*[text()='Некорректный пароль']");
-    public RegisterStellarburgers(WebDriver driver) {
-        this.driver = driver;
+    private static final By messageErrorPassword = By.xpath("//*[text()='Некорректный пароль']");
+    //Локатор надписи "Вход" странице логина
+    private static final By buttonEnter = By.xpath("//h2[text()='Вход']");
+    //Ожидаемый адрес страницы после регистраци
+    private static final String expectedURL = "https://stellarburgers.nomoreparties.site/login";
+
+    public RegisterStellarburgers() {
+
     }
-    @Step("Передача имени пользователя {setUserName} в поле \"Имя\"")
-    public void setNameField(String setUserName){
-        driver.findElement(fieldNameRegistration).isEnabled();
-        driver.findElement(fieldNameRegistration).clear();
-        driver.findElement(fieldNameRegistration).sendKeys(setUserName);
+
+    public static String getRegistrationPageTestURL() {
+        return REGISTRATION_PAGE_TEST_URL;
     }
-    @Step("Передача email пользователя {setUserEmail} в поле \"Email\"")
-    public void setEmailField(String setUserEmail){
-        driver.findElement(fieldEmailRegistration).isEnabled();
-        driver.findElement(fieldEmailRegistration).clear();
-        driver.findElement(fieldEmailRegistration).sendKeys(setUserEmail);
+    public static By getFieldNameRegistration() {
+        return fieldNameRegistration;
     }
-    @Step("Передача пароля пользователя {setUserPassword} в поле \"Пароль\"")
-    public void setPasswordField(String setUserPassword){
-        driver.findElement(fieldPasswordRegistration).isEnabled();
-        driver.findElement(fieldPasswordRegistration).clear();
-        driver.findElement(fieldPasswordRegistration).sendKeys(setUserPassword);
+
+    public static By getFieldEmailRegistration() {
+        return fieldEmailRegistration;
     }
-    @Step("Жмем кнопку \"Зарегистрироваться\"")
-    public void clickButtonRegistration(){
-        driver.findElement(buttonRegistration).click();
-        new WebDriverWait(driver, Duration.ofSeconds(2));
+
+    public static By getFieldPasswordRegistration() {
+        return fieldPasswordRegistration;
     }
-    @Step("Получаем результат нажатия кнопки")
-    public boolean getRegistrationStatus() throws Exception {
-        try {
-            driver.findElement(messageErrorPassword).isDisplayed();
-            return false;
-        } catch (NoSuchElementException e) {
-            return true;
-        }
+
+    public static By getButtonRegistration() {
+        return buttonRegistration;
+    }
+
+    public static By getMessageErrorPassword() {
+        return messageErrorPassword;
+    }
+
+    public static By getButtonEnter() {
+        return buttonEnter;
+    }
+
+    public static String getExpectedURL() {
+        return expectedURL;
     }
 }

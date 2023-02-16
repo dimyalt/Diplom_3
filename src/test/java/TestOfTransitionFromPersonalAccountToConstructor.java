@@ -1,22 +1,23 @@
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import sitepages.AccountStellarburgers;
 import sitepages.ConstructorStellarburgers;
 import sitepages.data.DriverOptions;
+import sitepages.data.SiteOptions;
 
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class TestOfTransitionFromPersonalAccountToConstructor {
     WebDriver driver;
-    private static final String PAGE_URL = "https://stellarburgers.nomoreparties.site/login";
-    private final String userEmail = "testuserChrome25@yandex.ru";
-    private final String userPassword = "testuser25";
+    DriverOptions driverBrowser = new DriverOptions();
+    ConstructorStellarburgers objConstructorPage; //Создаем объект класса страницы конструктора
     private final String clickPoint;
     private final String browser;  //Переменная для выбора браузера для тестирования (или Chrome или Яндекс.Браузер)
 
@@ -34,35 +35,32 @@ public class TestOfTransitionFromPersonalAccountToConstructor {
                 {"divClass", "browser"},
         };
     }
-
-    @Test
-    @DisplayName("Перехрод из личного кабинета в конструктор")
-    public void transitionToConstructor() throws Exception {
-        if(browser.equals("chrome")){
-            DriverOptions driverChrome = new DriverOptions();
-            System.setProperty(driverChrome.getDriverType(), driverChrome.getChromeDriverPath());
-            ChromeOptions options = new ChromeOptions();
-            options.setBinary(driverChrome.getChromePath());
-            options.addArguments("--headless");
-            driver = new ChromeDriver(options); //Драйвер для Chrome
-        }else{
-            DriverOptions driverBrowser = new DriverOptions();
-            System.setProperty(driverBrowser.getDriverType(), driverBrowser.getBrowserDriverPath());
-            ChromeOptions options = new ChromeOptions();
-            options.setBinary(driverBrowser.getBrowserPath());
-            options.addArguments("--headless");
-            driver = new ChromeDriver(options); //Драйвер для Яндекс.Браузера
+    @Before
+    public void setUp(){
+        if (browser.equals("chrome")) {
+            driver = new ChromeDriver(driverBrowser.getChromeOptions()); //Драйвер для Chrome
+        } else {
+            driver = new ChromeDriver(driverBrowser.getYaBrowserOptions()); //Драйвер для Яндекс.Браузер
         }
-        driver.get(PAGE_URL); //Переходим на страницу логина
-        ConstructorStellarburgers objConstructorPage = new ConstructorStellarburgers(driver); //Создаем объект класса страницы регистрации
-        objConstructorPage.getLoginUserAccount(userEmail, userPassword); // Заполняем поле "Email"
-        objConstructorPage.clickConstructorButton(clickPoint); // Переходим на страницу конструктора
-        assertTrue(objConstructorPage.getConstructorStatus());
+        objConstructorPage = new ConstructorStellarburgers();
+        driver.get(AccountStellarburgers.getLoginPageTestURL()); //Переходим на главную страницу
+        SiteOptions.getLoginUserAccount(driver); //Логинимся
+        SiteOptions.getUserAccount(driver);//Переходим в личный кабинет
+    }
+    @Test
+    @DisplayName("Переход из личного кабинета в конструктор")
+    public void transitionToConstructor(){
+        if (clickPoint.equals("pClass")){
+            driver.findElement(objConstructorPage.getConstructorButton()).click();
+        }else{
+            driver.findElement(objConstructorPage.getConstructorLogo()).click();
+        }
+        assertTrue(driver.findElement(objConstructorPage.getBurgerCheckout()).isDisplayed());
     }
     @After
     public void tearsDown(){
-        ConstructorStellarburgers objConstructorPage = new ConstructorStellarburgers(driver); //Создаем объект класса страницы логина
-        objConstructorPage.clickExitButton();
+        SiteOptions.getUserAccount(driver);
+        SiteOptions.clickExitButton(driver);
         driver.quit();
     }
 

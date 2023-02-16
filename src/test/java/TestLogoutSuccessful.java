@@ -8,19 +8,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import sitepages.UserPersonalAccountStarburgers;
+import sitepages.AccountStellarburgers;
 import sitepages.data.DriverOptions;
 import sitepages.data.SiteOptions;
 import java.time.Duration;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
-public class TestOfTransitionToPersonalAccount {
+public class TestLogoutSuccessful {
     WebDriver driver;
     DriverOptions driverBrowser = new DriverOptions();
-    UserPersonalAccountStarburgers objUserPersonalAccount; //Создаем объект класса страницы личного кабинета
+    AccountStellarburgers objAccountPage; //Создаем объект класса страницы личного кабинета
     private final String browser;
 
-    public TestOfTransitionToPersonalAccount(String browser) {
+
+    public TestLogoutSuccessful(String browser) {
         this.browser = browser;
     }
     @Parameterized.Parameters
@@ -30,6 +32,7 @@ public class TestOfTransitionToPersonalAccount {
                 {"browser"},
         };
     }
+
     @Before
     public void setUp(){
         if (browser.equals("chrome")) {
@@ -37,22 +40,23 @@ public class TestOfTransitionToPersonalAccount {
         } else {
             driver = new ChromeDriver(driverBrowser.getYaBrowserOptions()); //Драйвер для Яндекс.Браузер
         }
-        objUserPersonalAccount = new UserPersonalAccountStarburgers();
-        driver.get(UserPersonalAccountStarburgers.getLoginPageTestURL()); //Переходим на главную страницу
+        objAccountPage = new AccountStellarburgers();
+        driver.get(AccountStellarburgers.getLoginPageTestURL()); //Переходим на главную страницу
         SiteOptions.getLoginUserAccount(driver); //Логинимся
+        SiteOptions.getUserAccount(driver);//Переходим в личный кабинет
     }
     @Test
-    @DisplayName("Переход в личный кабинет пользователя")
-    public void userPersonalAccount(){
-        driver.findElement(objUserPersonalAccount.getUserArea()).click(); // Кликнули по кнопке "Личный кабинет"
-        new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления кнопки профиль
-                .until(ExpectedConditions.visibilityOfElementLocated(objUserPersonalAccount.getUserProfileButton()));
-    }
+    @DisplayName("Выход из личного кабинета пользователя")
+    public void logoutUserAccount(){
+        driver.findElement(AccountStellarburgers.getExitButton()).click();
+        new WebDriverWait(driver, Duration.ofSeconds(2))
+                .until(ExpectedConditions.visibilityOfElementLocated(AccountStellarburgers.getFieldEmailLogin()));
+        assertEquals(AccountStellarburgers.getExpectedURL(), driver.getCurrentUrl());
 
+    }
     @After
     public void tearsDown(){
-        SiteOptions.getUserAccount(driver);
-        SiteOptions.clickExitButton(driver);
         driver.quit();
     }
+
 }
