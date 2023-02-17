@@ -16,8 +16,7 @@ public class RegisterStellarburgers {
     private static final By messageErrorPassword = By.xpath("//*[text()='Некорректный пароль']");
     //Локатор надписи "Вход" странице логина
     private static final By buttonEnter = By.xpath("//h2[text()='Вход']");
-    //Ожидаемый адрес страницы после регистраци
-    private static final String expectedURL = "https://stellarburgers.nomoreparties.site/login";
+    private static final By enterText = By.xpath("//h2[text()='Вход']");
 
     public RegisterStellarburgers() {
 
@@ -50,7 +49,7 @@ public class RegisterStellarburgers {
         return buttonEnter;
     }
 
-    public static String getExpectedURL() {
-        return expectedURL;
+    public static By getEnterText() {
+        return enterText;
     }
 }

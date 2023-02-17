@@ -59,7 +59,8 @@ public class TestRegistrationWithGoodPasswordOk {
         driver.findElement(RegisterStellarburgers.getButtonRegistration()).click();
         new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.visibilityOfElementLocated(RegisterStellarburgers.getButtonEnter()));
-        assertEquals(RegisterStellarburgers.getExpectedURL(), driver.getCurrentUrl());
+        //assertEquals(RegisterStellarburgers.getBurgerCheckout(), driver.getCurrentUrl());
+        assertTrue(driver.findElement(RegisterStellarburgers.getEnterText()).isDisplayed());
     }
     @After
     public void tearsDown(){

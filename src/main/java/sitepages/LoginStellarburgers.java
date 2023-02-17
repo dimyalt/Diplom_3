@@ -24,16 +24,6 @@ public class LoginStellarburgers {
     private final By buttonExit = By.xpath("//button[text()='Выход']");
     public LoginStellarburgers() {
     }
-
-    public static String getMainPageTestURL() {
-        return MAIN_PAGE_TEST_URL;
-    }
-    public static String getRegisterPageTestURL() {
-        return REGISTER_PAGE_TEST_URL;
-    }
-    public static String getPasswordResetPageTestUrl() {
-        return PASSWORD_RESET_PAGE_TEST_URL;
-    }
     public By getFieldEmailLogin() {
         return fieldEmailLogin;
     }
@@ -50,16 +40,6 @@ public class LoginStellarburgers {
         return burgerCheckout;
     }
 
-    public By getBurgerLoginButton() {
-        return burgerLoginButton;
-    }
-
-    public By getUserArea() {
-        return userArea;
-    }
-    public By getUserLogin() {
-        return userLogin;
-    }
     public void userLogout(WebDriver driver){
         driver.findElement(userArea).click(); // Кликнули по кнопке "Личный кабинет"
         new WebDriverWait(driver, Duration.ofSeconds(3)) // Ждем 2 секунды до появления кнопки профиль
@@ -67,5 +47,50 @@ public class LoginStellarburgers {
         driver.findElement(buttonExit).click();
         new WebDriverWait(driver, Duration.ofSeconds(2));
     }
+    public void setUserLoginPoint(WebDriver driver, String loginPoint){
+        switch (loginPoint) {
+            case "Войти в аккаунт":
+                loginFromMainPage(driver);
+                break;
+            case "Личный кабинет":
+                loginFromUserAccount(driver);
+                break;
+            case "Регистрация":
+                loginFromRegistrationPage(driver);
+                break;
+            case "Восстановление пароля":
+                loginFromPasswordRestorePage(driver);
+                break;
+        }
 
+    }
+
+    public void loginFromMainPage(WebDriver driver) {
+        driver.get(MAIN_PAGE_TEST_URL); //Переходим на главную страницу
+        driver.findElement(burgerLoginButton).click(); // Кликнули по кнопке "Войти в аккаунт"
+        new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления поля ввода Email
+                .until(ExpectedConditions.visibilityOfElementLocated(fieldEmailLogin));
+    }
+    public void loginFromUserAccount(WebDriver driver){
+        driver.get(MAIN_PAGE_TEST_URL); //Переходим на главную страницу
+        driver.findElement(userArea).click(); // Кликнули по кнопке "Личный кабинет"
+        new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления поля ввода Email
+                .until(ExpectedConditions.visibilityOfElementLocated(fieldEmailLogin));
+    }
+    public void loginFromRegistrationPage(WebDriver driver){
+        driver.get(REGISTER_PAGE_TEST_URL); //Переходим на страницу регистрации
+        new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления ссылки "Войти"
+                .until(ExpectedConditions.visibilityOfElementLocated(userLogin));
+        driver.findElement(userLogin).click(); // Кликнули по ссылке "Войти"
+        new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления поля ввода Email
+                .until(ExpectedConditions.visibilityOfElementLocated(fieldEmailLogin));
+    }
+    public void loginFromPasswordRestorePage(WebDriver driver){
+        driver.get(PASSWORD_RESET_PAGE_TEST_URL); //Переходим на страницу восстановления пароля
+        new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления ссылки "Войти"
+                .until(ExpectedConditions.visibilityOfElementLocated(userLogin));
+        driver.findElement(userLogin).click(); // Кликнули по ссылке "Войти"
+        new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления поля ввода Email
+                .until(ExpectedConditions.visibilityOfElementLocated(fieldEmailLogin));
+    }
 }

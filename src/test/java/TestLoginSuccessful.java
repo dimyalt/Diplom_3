@@ -50,32 +50,8 @@ public class TestLoginSuccessful {
     @Test
     @DisplayName("Логин пользователя")
     public void userLogin(){
-        switch (pointOfEntry) {
-            case "Войти в аккаунт":
-                driver.get(LoginStellarburgers.getMainPageTestURL()); //Переходим на главную страницу
-                driver.findElement(objLoginPage.getBurgerLoginButton()).click(); // Кликнули по кнопке "Войти в аккаунт"
-                new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления поля ввода Email
-                        .until(ExpectedConditions.visibilityOfElementLocated(objLoginPage.getFieldEmailLogin()));
-            case "Личный кабинет":
-                driver.get(LoginStellarburgers.getMainPageTestURL()); //Переходим на главную страницу
-                driver.findElement(objLoginPage.getUserArea()).click(); // Кликнули по кнопке "Личный кабинет"
-                new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления поля ввода Email
-                        .until(ExpectedConditions.visibilityOfElementLocated(objLoginPage.getFieldEmailLogin()));
-            case "Регистрация":
-                driver.get(LoginStellarburgers.getRegisterPageTestURL()); //Переходим на страницу регистрации
-                new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления ссылки "Войти"
-                        .until(ExpectedConditions.visibilityOfElementLocated(objLoginPage.getUserLogin()));
-                driver.findElement(objLoginPage.getUserLogin()).click(); // Кликнули по ссылке "Войти"
-                new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления поля ввода Email
-                        .until(ExpectedConditions.visibilityOfElementLocated(objLoginPage.getFieldEmailLogin()));
-            case "Восстановление пароля":
-                driver.get(LoginStellarburgers.getPasswordResetPageTestUrl()); //Переходим на страницу восстановления пароля
-                new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления ссылки "Войти"
-                        .until(ExpectedConditions.visibilityOfElementLocated(objLoginPage.getUserLogin()));
-                driver.findElement(objLoginPage.getUserLogin()).click(); // Кликнули по ссылке "Войти"
-                new WebDriverWait(driver, Duration.ofSeconds(2)) // Ждем 2 секунды до появления поля ввода Email
-                        .until(ExpectedConditions.visibilityOfElementLocated(objLoginPage.getFieldEmailLogin()));
-            }
+        objLoginPage.setUserLoginPoint(driver, pointOfEntry);
+        // Решил кейсы перенести в другой класс, а логику тестового класса оставить
         driver.findElement(objLoginPage.getFieldEmailLogin()).clear();
         driver.findElement(objLoginPage.getFieldEmailLogin()).sendKeys(SiteOptions.getTestUserEmail());
         driver.findElement(objLoginPage.getFieldPasswordLogin()).clear();
